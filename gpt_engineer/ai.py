@@ -35,6 +35,7 @@ class AI:
 
         logger.debug(f"Creating a new chat completion: {messages}")
         response = openai.ChatCompletion.create(
+            engine="gpt-4_playground",
             messages=messages,
             stream=True,
             model=self.model,
@@ -55,6 +56,9 @@ class AI:
 
 def fallback_model(model: str) -> str:
     try:
+        openai.api_type = "azure"
+        openai.api_base = "https://pingcat-bot.openai.azure.com/"
+        openai.api_version = "2023-03-15-preview"
         openai.Model.retrieve(model)
         return model
     except openai.InvalidRequestError:
